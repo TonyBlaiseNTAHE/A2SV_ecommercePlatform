@@ -1,6 +1,10 @@
 import express from "express";
 import { register, login } from "../controllers/authController.js";
 
+/**
+ * the authentication route
+ */
+
 const router = express.Router();
 
 router.post("/register", register);

@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
+/**
+ * orderSchema: the order schema
+ */
+
 const orderItemSchema = new mongoose.Schema(
   {
     productId: {
@@ -40,7 +44,7 @@ const orderSchema = new mongoose.Schema(
     status: {
       type: String,
       required: true,
-      enum: ["Pending", "Paid", "Shipped", "Delivered", "Cancelled"], // optional improvement
+      enum: ["Pending", "Paid", "Shipped", "Delivered", "Cancelled"],
       default: "Pending",
     },
     userId: {

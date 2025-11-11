@@ -1,6 +1,7 @@
 import Product from "../models/product.js";
 import { success, fail } from "../utils/response.js";
 import validator from "validator";
+import NodeCache from "node-cache";
 
 export const createProduct = async (req, res, next) => {
   try {
@@ -58,7 +59,7 @@ export const updateProduct = async (req, res, next) => {
       errors.push("stock must be integer >=0");
     if (errors.length) return fail(res, 400, "Validation error", errors);
 
-    const product = await Product.findOneAndUpdate({ id }, updates, {
+    const product = await Product.findByIdAndUpdate(id, updates, {
       new: true,
       runValidators: true,
     });
@@ -73,7 +74,7 @@ export const updateProduct = async (req, res, next) => {
 export const deleteProduct = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const product = await Product.findOneAndDelete({ id });
+    const product = await Product.findByIdAndDelete(id);
     if (!product)
       return fail(res, 404, "Product not found", ["product not found"]);
     return success(res, 200, "Product deleted successfully", null);
@@ -85,7 +86,7 @@ export const deleteProduct = async (req, res, next) => {
 export const getProduct = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const product = await Product.findOne({ id }).lean();
+    const product = await Product.findById(id).lean();
     if (!product)
       return fail(res, 404, "Product not found", ["product not found"]);
     return success(res, 200, "Product fetched", product);
@@ -100,8 +101,22 @@ export const listProducts = async (req, res, next) => {
     page = parseInt(page, 10);
     limit = parseInt(limit, 10);
 
-    const filter = search ? { name: { $regex: search, $options: "i" } } : {};
+    const cacheKey = `products_${page}_${limit}_${search}`;
+    const cachedData = cache.get(cacheKey);
+    if (cachedData) {
+      return res.status(200).json({
+        success: true,
+        message: "Products fetched (from cache)",
+        object: cachedData.products,
+        currentPage: cachedData.page,
+        pageSize: cachedData.limit,
+        totalPages: cachedData.totalPages,
+        totalProducts: cachedData.totalProducts,
+        errors: null,
+      });
+    }
 
+    const filter = search ? { name: { $regex: search, $options: "i" } } : {};
     const totalProducts = await Product.countDocuments(filter);
     const totalPages = Math.ceil(totalProducts / limit) || 1;
     const products = await Product.find(filter)
@@ -110,9 +125,12 @@ export const listProducts = async (req, res, next) => {
       .select("id name price stock category")
       .lean();
 
+    const responseData = { products, page, limit, totalPages, totalProducts };
+    cache.set(cacheKey, responseData);
+
     return res.status(200).json({
       success: true,
-      message: "Products fetched",
+      message: "Products fetched (from DB)",
       object: products,
       currentPage: page,
       pageSize: limit,

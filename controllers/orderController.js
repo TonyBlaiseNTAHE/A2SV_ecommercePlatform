@@ -3,6 +3,14 @@ import Product from "../models/product.js";
 import Order from "../models/order.js";
 import { success, fail } from "../utils/response.js";
 
+/**
+ *
+ * @param {request} req
+ * @param {response get from the request} res
+ * @param {middleware for handeling the errors} next
+ * @returns
+ */
+
 export const placeOrder = async (req, res, next) => {
   const session = await mongoose.startSession();
   try {

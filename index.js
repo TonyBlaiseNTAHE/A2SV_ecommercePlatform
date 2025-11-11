@@ -33,8 +33,8 @@ app.get("/", (req, res) =>
 );
 
 app.use("/auth", authRoutes);
-// app.use("/products", productRoutes);
-// app.use("/orders", orderRoutes);
+app.use("/products", productRoutes);
+app.use("/orders", orderRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err);

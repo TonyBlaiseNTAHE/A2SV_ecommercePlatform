@@ -4,12 +4,17 @@ import jwt from "jsonwebtoken";
 import { success, fail } from "../utils/response.js";
 import validator from "validator";
 
+/**
+ * authController: this controller is for signing-up and login up a user
+ */
+
 const Pass_Reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 const regx = /^[A-Za-z0-9]+$/;
 
 export const register = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
+    console.log("Received body:", req.body);
 
     if (!username || !regx.test(username)) {
       return fail(res, 400, "Validation error", [

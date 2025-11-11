@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
 /**
- * userSchaema
+ * userSchema: the user Shema
  */
 
 const userSchema = new mongoose.Schema(
