@@ -23,13 +23,12 @@ afterAll(async () => {
 describe("Products endpoints", () => {
   let adminToken;
   beforeAll(async () => {
-    // create admin user
     await request(app).post("/auth/register").send({
       username: "admin",
       email: "admin@example.com",
       password: "AdminP@ss1!",
     });
-    // promote to admin directly via mongoose
+
     const u = await User.findOne({ email: "admin@example.com" });
     u.role = "Admin";
     await u.save();

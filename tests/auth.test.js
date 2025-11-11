@@ -10,7 +10,6 @@ beforeAll(async () => {
   const uri = mongod.getUri();
   process.env.MONGO = uri;
   process.env.NODE_ENV = "test";
-  // import app after setting env so index.js connects to in-memory mongo
   const imported = await import("../index.js");
   app = imported.default;
 });
@@ -33,7 +32,6 @@ describe("Auth endpoints", () => {
   });
 
   it("should not register duplicate email", async () => {
-    // register first
     await request(app).post("/auth/register").send({
       username: "another",
       email: "dup@example.com",

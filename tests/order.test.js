@@ -26,7 +26,6 @@ describe("Orders endpoints", () => {
   let productId;
 
   beforeAll(async () => {
-    // create a normal user
     await request(app).post("/auth/register").send({
       username: "buyer",
       email: "buyer@example.com",
@@ -39,7 +38,6 @@ describe("Orders endpoints", () => {
     });
     userToken = res.body.object.token;
 
-    // create a product (via admin)
     await request(app).post("/auth/register").send({
       username: "admin2",
       email: "admin2@example.com",
@@ -76,7 +74,6 @@ describe("Orders endpoints", () => {
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty("success", true);
 
-    // verify stock decreased
     const prod = await Product.findById(productId);
     expect(prod.stock).toBe(8);
   });
