@@ -1,6 +1,26 @@
 import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
+const orderItemSchema = new mongoose.Schema(
+  {
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      required: true,
+      min: 1,
+    },
+    priceAtPurchase: {
+      type: Number,
+      required: true,
+    },
+  },
+  { _id: false }
+);
+
 const orderSchema = new mongoose.Schema(
   {
     id: {
@@ -25,13 +45,13 @@ const orderSchema = new mongoose.Schema(
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // ✅ buyer reference
+      ref: "User",
       required: true,
     },
     products: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Product", // ✅ many-to-many reference
+        ref: "Product",
         required: true,
       },
     ],
