@@ -1,6 +1,6 @@
 module.exports = {
-  testEnvironment: 'node',
+  testEnvironment: "node",
   transform: {},
-  moduleFileExtensions: ['js', 'json', 'node'],
+  moduleFileExtensions: ["js", "json", "node"],
   testTimeout: 20000,
 };
