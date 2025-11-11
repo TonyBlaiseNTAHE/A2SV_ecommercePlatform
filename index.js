@@ -1,6 +1,11 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import cors from "cors";
+
+import authRoutes from "./routes/auth.js";
+import productRoutes from "./routes/product.js";
+import orderRoutes from "./routes/order.js";
 
 dotenv.config();
 
@@ -14,6 +19,27 @@ mongoose
   });
 
 const app = express();
+
+app.use(cors());
+app.use(express.json({ limit: "50kb" }));
+
+app.get("/", (req, res) =>
+  res.json({
+    success: true,
+    message: "E-commerce API is working",
+    object: null,
+    errors: null,
+  })
+);
+
+app.use("/auth", authRoutes);
+// app.use("/products", productRoutes);
+// app.use("/orders", orderRoutes);
+
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ success: false, message: "Internal server error" });
+});
 
 app.listen(3000, () => {
   console.log("Server listening on port 3000");
