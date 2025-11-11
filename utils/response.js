@@ -19,7 +19,7 @@ export function fail(
   res,
   statusCode = 400,
   message = "Bad Request",
-  error = []
+  errors = []
 ) {
   return res.status(statusCode).json({
     success: false,

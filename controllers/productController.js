@@ -3,6 +3,9 @@ import { success, fail } from "../utils/response.js";
 import validator from "validator";
 import NodeCache from "node-cache";
 
+// simple in-memory cache for product listing
+const cache = new NodeCache({ stdTTL: 60 });
+
 export const createProduct = async (req, res, next) => {
   try {
     const { name, description, price, stock, category } = req.body;

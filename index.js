@@ -41,6 +41,11 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, message: "Internal server error" });
 });
 
-app.listen(3000, () => {
-  console.log("Server listening on port 3000");
-});
+// Export app for testing (don't listen when running tests)
+if (process.env.NODE_ENV !== "test") {
+  app.listen(3000, () => {
+    console.log("Server listening on port 3000");
+  });
+}
+
+export default app;
