@@ -3,6 +3,7 @@
 This document describes the REST API provided by the A2SV_ecommercePlatform project. It is intended to help developers understand the endpoints, request/response formats, models, environment variables, and known issues.
 
 ## Quick overview
+
 - Tech: Node.js (ES modules), Express, Mongoose, JWT for auth
 - Entry point: `index.js` (listens on port 3000 by default)
 - Main responsibilities:
@@ -36,6 +37,7 @@ npm run dev
 ```
 
 Notes:
+
 - Do not commit real credentials to the repository. Add `.env` to `.gitignore` and keep an example in `.env.example`.
 
 ## Authentication
@@ -67,7 +69,9 @@ Success example:
 {
   "success": true,
   "message": "OK",
-  "object": { /* payload */ },
+  "object": {
+    /* payload */
+  },
   "errors": null
 }
 ```
@@ -88,6 +92,7 @@ Note: There is a known bug in `utils/response.js` where the `fail` helper refere
 ## Models (Mongoose)
 
 - User (`models/user.js`)
+
   - id: string (uuid, API-friendly id)
   - username: string (unique)
   - email: string (unique)
@@ -96,6 +101,7 @@ Note: There is a known bug in `utils/response.js` where the `fail` helper refere
   - timestamps: createdAt, updatedAt
 
 - Product (`models/product.js`)
+
   - id: string (uuid)
   - name: string (unique)
   - description: string
@@ -121,6 +127,7 @@ Note: controller code expects `orderItems` (array of { productId, quantity, pric
 ### Auth
 
 - POST /auth/register
+
   - Description: register a new user
   - Body (JSON):
     - username: string (alphanumeric)
@@ -142,6 +149,7 @@ Note: controller code expects `orderItems` (array of { productId, quantity, pric
 ### Products
 
 - GET /products
+
   - Query params:
     - page (default 1)
     - limit (default 10)
@@ -151,17 +159,20 @@ Note: controller code expects `orderItems` (array of { productId, quantity, pric
     - pagination: currentPage, pageSize, totalPages, totalProducts
 
 - GET /products/:id
+
   - Success: 200
     - object: full product
   - Errors: 404 if not found
 
 - POST /products (Admin only)
+
   - Headers: Authorization: Bearer <token>
   - Body (JSON): name, description, price (number), stock (int), category
   - Success: 201 Created — returns created product
   - Errors: 400 validation, 401/403 auth/role errors
 
 - PUT /products/:id (Admin only)
+
   - Body: partial fields to update
   - Success: 200 updated product
 
@@ -171,6 +182,7 @@ Note: controller code expects `orderItems` (array of { productId, quantity, pric
 ### Orders
 
 - POST /orders (authenticated)
+
   - Headers: Authorization: Bearer <token>
   - Body (JSON): array of items, e.g.
     ```json
@@ -237,9 +249,11 @@ curl -X POST http://localhost:3000/products -H "Authorization: Bearer <token>" -
 ```
 
 ## Where I put this doc
+
 - `docs/API.md` (this file)
 
 If you want, I can also:
+
 - open PR that fixes the `fail` helper and the `cache` instantiation, and add a `.env.example` and `.gitignore` entry (small, low-risk changes);
 - or generate a Postman collection / OpenAPI (swagger) file from this documentation.
 
