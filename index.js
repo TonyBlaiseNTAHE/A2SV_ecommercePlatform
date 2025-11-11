@@ -6,6 +6,7 @@ import cors from "cors";
 import authRoutes from "./routes/auth.js";
 import productRoutes from "./routes/product.js";
 import orderRoutes from "./routes/order.js";
+import rateLimit from "./middleware/rateLimit.js";
 
 dotenv.config();
 
@@ -32,7 +33,13 @@ app.get("/", (req, res) =>
   })
 );
 
-app.use("/auth", authRoutes);
+// Global rate limiter (protects all endpoints)
+const globalLimiter = rateLimit();
+app.use(globalLimiter);
+
+// Auth routes should have stricter limits to prevent brute-force
+const authLimiter = rateLimit({ windowMs: 60 * 1000, max: 10 });
+app.use("/auth", authLimiter, authRoutes);
 app.use("/products", productRoutes);
 app.use("/orders", orderRoutes);
 

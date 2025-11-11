@@ -89,6 +89,13 @@ Failure example (validation):
 
 Note: There is a known bug in `utils/response.js` where the `fail` helper references the wrong variable name; see Known issues below.
 
+Rate limiting
+
+- The API applies rate limiting to protect against abuse. Defaults:
+  - Global: 100 requests per 15 minutes per IP (config via `RATE_LIMIT_WINDOW_MS` and `RATE_LIMIT_MAX`).
+  - Auth routes (`/auth`): 10 requests per minute per IP.
+  - These are implemented in `middleware/rateLimit.js`. For production, replace with a distributed store (Redis) implementation.
+
 ## Models (Mongoose)
 
 - User (`models/user.js`)
