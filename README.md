@@ -90,5 +90,3 @@ Notes when running tests:
 - Middleware: `middleware/` (auth, role, rateLimit)
 - Tests: `tests/`
 - API docs: `docs/API.md`
-
-If you want, I can open a PR with the changes that include these docs, tests, and rate limiting enhancements, or convert the rate limiter to a Redis-backed solution next.
